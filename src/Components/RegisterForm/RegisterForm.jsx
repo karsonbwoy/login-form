@@ -3,6 +3,7 @@ import './RegisterForm.css';
 import { FaUser, FaLock, FaHandLizard } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
     const [username, setUsername] = useState('')
@@ -13,6 +14,7 @@ const RegisterForm = () => {
     const [emailIsValid, setEmailIsValid] = useState(true);
     const [passwordIsValid, setPasswordIsValid] = useState(true);
     const [error, setError] = useState("")
+    const navigate = useNavigate();
 
     const validateUsername = username.length > 3
     const validateEmail = () => {
@@ -64,7 +66,8 @@ const RegisterForm = () => {
             e.preventDefault();
             return;
         }
-        setError("")
+        setError("");
+        navigate("/success");
 
     }
 
@@ -93,7 +96,7 @@ const RegisterForm = () => {
                 </div>
 
                 <div className="policies">
-                    <label htmlFor="policies-checkbox"><input type="checkbox" required id="policies-checkbox" />I've read and consent <a href="#">policies</a></label>
+                    <label htmlFor="policies-checkbox"><input type="checkbox" required id="policies-checkbox" />I've read and consent to the <a href="#">policies</a></label>
                 </div>
 
                 <button type="submit" onClick={handleSubmit}>Register</button>
