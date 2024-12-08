@@ -9,7 +9,9 @@ const RegisterForm = () => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [email, setEmail] = useState('')
-    const [validation, setValidation] = useState(true);
+    const [usernameIsValid, setUsernameIsValid] = useState(true);
+    const [emailIsValid, setEmailIsValid] = useState(true);
+    const [passwordIsValid, setPasswordIsValid] = useState(true);
     const [error, setError] = useState("")
 
     const validateUsername = username.length > 3
@@ -24,33 +26,38 @@ const RegisterForm = () => {
         const lowercase = /[a-z]/.test(p);
         const number = /[0-9]/.test(p);
         const specialChar = /[@$!%*?&]/.test(p);
-
-        setValidation(length && uppercase && lowercase && number && specialChar);
         return length && uppercase && lowercase && number && specialChar
     };
     const checkPasswords = password === confirmPassword
 
     function handleSubmit(e) {
+        setUsernameIsValid(true);
+        setEmailIsValid(true);
+        setPasswordIsValid(true);
         if (!validateUsername) {
+            setUsernameIsValid(false);
             console.log("Too short username");
-            setError("Too short username!")
+            setError("Invalid username!")
             e.preventDefault();
             return;
         }
 
         if (!validateEmail()) {
+            setEmailIsValid(false);
             console.log("Wrong Email");
-            setError("Wrong Email!")
+            setError("Invalid Email!")
             e.preventDefault();
             return;
         }
 
         if (!validatePassword(password)) {
+            setPasswordIsValid(false);
             console.log("Wrong complexity");
             setError("Check complexity of your password")
             e.preventDefault();
             return;
         }
+
         if (!checkPasswords) {
             console.log("Check password");
             setError("Passwords are not the same")
@@ -66,17 +73,17 @@ const RegisterForm = () => {
         <div className="wrapper">
             <form action="">
                 <h1>Create an acccount</h1>
-                {!validation && <p className="error-message">{error}</p>}
+                {(!usernameIsValid || !emailIsValid || !passwordIsValid) && <p className="error-message">{error}</p>}
                 <div className="input-box">
-                    <input type="text" placeholder="Username" required onChange={(e) => setUsername(e.target.value)} />
+                    <input type="text" className={usernameIsValid ? "" : "red-box"} placeholder="Username" required onChange={(e) => setUsername(e.target.value)} />
                     <FaUser className="icon" />
                 </div>
                 <div className="input-box">
-                    <input type="text" placeholder="Email" required onChange={(e) => setEmail(e.target.value)} />
+                    <input type="text" className={emailIsValid ? "" : "red-box"} placeholder="Email" required onChange={(e) => setEmail(e.target.value)} />
                     <MdEmail className="icon" />
                 </div>
                 <div className="input-box">
-                    <input type="password" className={validation ? "" : "red-box"} placeholder="Password" required onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" className={passwordIsValid ? "" : "red-box"} placeholder="Password" required onChange={(e) => setPassword(e.target.value)} />
                     <FaLock className="icon" />
                 </div>
 
