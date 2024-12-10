@@ -139,7 +139,7 @@ const RegisterForm = () => {
         <div className="policies">
           <label htmlFor="policies-checkbox">
             <input type="checkbox" required id="policies-checkbox" />
-            I've read and consent to the <a href="#">policies</a>
+            I've read and consent to the <a href="/">policies</a>
           </label>
         </div>
 
