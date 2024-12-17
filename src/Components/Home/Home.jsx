@@ -15,7 +15,7 @@ const Home = () => {
                     user ?
                         <>
                             <p>
-                                `Hello {user}`
+                                Hello {user}
                             </p>
                             <button onClick={logout}>Logout</button>
                         </>

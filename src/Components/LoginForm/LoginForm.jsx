@@ -1,7 +1,7 @@
-import React, { use, useState, useContext } from "react";
+import React, { use, useState, useContext, useEffect } from "react";
 import "./LoginForm.css";
 import { FaUser, FaLock } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import UserContext from "../../UserContext";
 
 
@@ -15,7 +15,14 @@ const LoginForm = () => {
         username,
         password,
     }
-    const { login } = useContext(UserContext)
+    const { user, login } = useContext(UserContext)
+    console.log(user);
+
+    useEffect(() => {
+        if (user) {
+            navigate('/')
+        }
+    })
 
     function handleSubmit(e) {
         e.preventDefault();
