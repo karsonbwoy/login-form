@@ -5,118 +5,121 @@ import { MdEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
-
-    const [validationErrors, setValidationErrors] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
-
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [usernameIsValid, setUsernameIsValid] = useState(true);
+    const [emailIsValid, setEmailIsValid] = useState(true);
+    const [passwordIsValid, setPasswordIsValid] = useState(true);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
+    const user = {
+        username,
+        email,
+        password,
+    };
 
-    // Validation Functions
-    const validateUsername = (username) => username.length > 3;
-
-    const validateEmail = (email) => {
+    const validateUsername = username.length > 3;
+    const validateEmail = () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
-    const validatePassword = (password) => {
-        const length = password.length >= 8;
-        const uppercase = /[A-Z]/.test(password);
-        const lowercase = /[a-z]/.test(password);
-        const number = /[0-9]/.test(password);
-        const specialChar = /[@$!%*?&]/.test(password);
+    const validatePassword = (p) => {
+        const length = p.length >= 8;
+        const uppercase = /[A-Z]/.test(p);
+        const lowercase = /[a-z]/.test(p);
+        const number = /[0-9]/.test(p);
+        const specialChar = /[@$!%*?&]/.test(p);
         return length && uppercase && lowercase && number && specialChar;
     };
+    const checkPasswords = password === confirmPassword;
 
-    const passwordsMatch = formData.password === formData.confirmPassword;
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
-
-    const handleSubmit = (e) => {
+    function handleSubmit(e) {
+        setUsernameIsValid(true);
+        setEmailIsValid(true);
+        setPasswordIsValid(true);
         e.preventDefault();
-        const errors = {};
-
-        if (!validateUsername(formData.username)) {
-            errors.username = "Username must be at least 4 characters long.";
+        if (!validateUsername) {
+            setUsernameIsValid(false);
+            console.log("Too short username");
+            setError("Invalid username!");
+            e.preventDefault();
+            return;
         }
 
-        if (!validateEmail(formData.email)) {
-            errors.email = "Invalid email format.";
+        if (!validateEmail()) {
+            setEmailIsValid(false);
+            console.log("Wrong Email");
+            setError("Invalid Email!");
+            e.preventDefault();
+            return;
         }
 
-        if (!validatePassword(formData.password)) {
-            errors.password = "Password must be at least 8 characters, including uppercase, lowercase, number, and special character.";
+        if (!validatePassword(password)) {
+            setPasswordIsValid(false);
+            console.log("Wrong complexity");
+            setError("Check complexity of your password");
+            e.preventDefault();
+            return;
         }
 
-        if (!passwordsMatch) {
-            errors.confirmPassword = "Passwords do not match.";
+        if (!checkPasswords) {
+            console.log("Check password");
+            setError("Passwords are not the same");
+            e.preventDefault();
+            return;
         }
-
-        setValidationErrors(errors);
-
-        if (Object.keys(errors).length === 0) {
-            // Submit the form
-            navigate("/success");
-        }
-    };
+        setError("");
+        fetch("http://localhost:5000/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        })
+            .then((response) => {
+                if (response.status === 201) {
+                    navigate("/success");
+                }
+                return response.json();
+            })
+            .then((data) => setError(data.message));
+    }
 
     return (
         <div className="wrapper">
-            <form onSubmit={handleSubmit}>
-                <h1>Create an Account</h1>
-
-                {Object.values(validationErrors).map((error, index) => (
-                    <p key={index} className="error-message">{error}</p>
-                ))}
-
+            <form action="" onSubmit={handleSubmit}>
+                <h1>Create an acccount</h1>
+                <p className="error-message">{error}</p>
                 <div className="input-box">
                     <input
                         type="text"
-                        name="username"
+                        className={usernameIsValid ? "" : "red-box"}
                         placeholder="Username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        className={validationErrors.username ? "red-box" : ""}
                         required
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     <FaUser className="icon" />
                 </div>
-
                 <div className="input-box">
                     <input
                         type="text"
-                        name="email"
+                        className={emailIsValid ? "" : "red-box"}
                         placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={validationErrors.email ? "red-box" : ""}
                         required
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <MdEmail className="icon" />
                 </div>
-
                 <div className="input-box">
                     <input
                         type="password"
-                        name="password"
+                        className={passwordIsValid ? "" : "red-box"}
                         placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className={validationErrors.password ? "red-box" : ""}
                         required
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     <FaLock className="icon" />
                 </div>
@@ -124,26 +127,27 @@ const RegisterForm = () => {
                 <div className="input-box">
                     <input
                         type="password"
-                        name="confirmPassword"
-                        placeholder="Confirm Password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        className={validationErrors.confirmPassword ? "red-box" : ""}
+                        className={checkPasswords ? "" : "red-box"}
+                        placeholder="Confirm password"
                         required
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     <FaLock className="icon" />
                 </div>
 
                 <div className="policies">
-                    <label>
-                        <input type="checkbox" required /> I've read and consent to the <a href="#">policies</a>
+                    <label htmlFor="policies-checkbox">
+                        <input type="checkbox" required id="policies-checkbox" />
+                        I've read and consent to the <a href="/">policies</a>
                     </label>
                 </div>
 
                 <button type="submit">Register</button>
 
                 <div className="register-link">
-                    <p>Already have an account? <Link to="/login">Login</Link></p>
+                    <p>
+                        Already have an account? <Link to="/login">Login</Link>
+                    </p>
                 </div>
             </form>
         </div>
