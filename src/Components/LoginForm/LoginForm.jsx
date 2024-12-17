@@ -1,69 +1,97 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import "./LoginForm.css";
 import { FaUser, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberLogin, setRememberLogin] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [rememberLogin, setRememberLogin] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [error, setError] = useState("");
+    const navigate = useNavigate()
+    const user = {
+        username,
+        password,
+    }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    console.log(
-      "User: " +
-        username +
-        " Password: " +
-        password +
-        " Remember? " +
-        rememberLogin
+    function handleSubmit(e) {
+        e.preventDefault();
+        fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    navigate("/");
+                    setLoggedIn(true)
+
+
+                }
+                return response.json();
+            })
+            .then((data) => setError(data.message))
+            .catch(error => {
+                console.log(error);
+            });
+        console.log(
+            "User: " +
+            username +
+            " Password: " +
+            password +
+            " Remember: " +
+            rememberLogin
+        );
+    }
+
+    return (
+        <div className="wrapper">
+            <form action="/" onSubmit={handleSubmit}>
+                <h1>Login</h1>
+                <p className="error-message">{error}</p>
+                <div className="input-box">
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        required
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <FaUser className="icon" />
+                </div>
+                <div className="input-box">
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        required
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <FaLock className="icon" />
+                </div>
+
+                <div className="remember-forgot">
+                    <label htmlFor="">
+                        <input
+                            type="checkbox"
+                            onChange={(e) => setRememberLogin(e.target.value)}
+                        />
+                        Remember me
+                    </label>
+                    <Link to="/forgot">Forgot password?</Link>
+                </div>
+
+                <button type="submit">Login</button>
+
+                <div className="register-link">
+                    <p>
+                        Don't have an account? <Link to="/register">Register</Link>
+                    </p>
+                </div>
+            </form>
+        </div>
     );
-  }
-
-  return (
-    <div className="wrapper">
-      <form action="/" onSubmit={handleSubmit}>
-        <h1>Login</h1>
-        <div className="input-box">
-          <input
-            type="text"
-            placeholder="Username"
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <FaUser className="icon" />
-        </div>
-        <div className="input-box">
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FaLock className="icon" />
-        </div>
-
-        <div className="remember-forgot">
-          <label htmlFor="">
-            <input
-              type="checkbox"
-              onChange={(e) => setRememberLogin(e.target.value)}
-            />
-            Remember me
-          </label>
-          <Link to="/forgot">Forgot password?</Link>
-        </div>
-
-        <button type="submit">Login</button>
-
-        <div className="register-link">
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
-        </div>
-      </form>
-    </div>
-  );
 };
 
 export default LoginForm;

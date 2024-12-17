@@ -37,6 +37,7 @@ const RegisterForm = () => {
     const checkPasswords = password === confirmPassword;
 
     function handleSubmit(e) {
+        setError("");
         setUsernameIsValid(true);
         setEmailIsValid(true);
         setPasswordIsValid(true);
@@ -71,7 +72,6 @@ const RegisterForm = () => {
             e.preventDefault();
             return;
         }
-        setError("");
         fetch("http://localhost:5000/api/auth/register", {
             method: "POST",
             headers: {
@@ -85,7 +85,8 @@ const RegisterForm = () => {
                 }
                 return response.json();
             })
-            .then((data) => setError(data.message));
+            .then((data) => setError(data.message))
+            .catch(error => { setError('Server error') });
     }
 
     return (
