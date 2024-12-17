@@ -1,19 +1,21 @@
-import React, { use, useState } from "react";
+import React, { use, useState, useContext } from "react";
 import "./LoginForm.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../../UserContext";
+
 
 const LoginForm = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rememberLogin, setRememberLogin] = useState(false);
-    const [loggedIn, setLoggedIn] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate()
-    const user = {
+    const data = {
         username,
         password,
     }
+    const { login } = useContext(UserContext)
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -22,16 +24,17 @@ const LoginForm = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify(data),
         })
             .then((response) => {
+                let fetchedData = response.json()
                 if (response.status === 200) {
+                    login(username)
                     navigate("/");
-                    setLoggedIn(true)
 
 
                 }
-                return response.json();
+                return fetchedData
             })
             .then((data) => setError(data.message))
             .catch(error => {

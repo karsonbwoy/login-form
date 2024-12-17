@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import './Home.css';
 import { Link } from "react-router-dom";
+import UserContext from "../../UserContext";
 
 
 
 const Home = () => {
-    const [loggedIn, setLoggedIn] = useState(false)
+    const { user, logout } = useContext(UserContext)
     return (
         <div className="wrapper">
             <form action="">
                 <h1>Home</h1>
                 {
-                    loggedIn ?
-                        "User content placeholder"
+                    user ?
+                        <>
+                            <p>
+                                `Hello {user}`
+                            </p>
+                            <button onClick={logout}>Logout</button>
+                        </>
+
                         :
                         (<>
                             <h2>
