@@ -22,7 +22,7 @@ const LoginForm = () => {
         if (user) {
             navigate('/')
         }
-    })
+    }, [user])
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -47,21 +47,13 @@ const LoginForm = () => {
             .catch(error => {
                 console.log(error);
             });
-        console.log(
-            "User: " +
-            username +
-            " Password: " +
-            password +
-            " Remember: " +
-            rememberLogin
-        );
     }
 
     return (
         <div className="wrapper">
             <form action="/" onSubmit={handleSubmit}>
                 <h1>Login</h1>
-                <p className="error-message">{error}</p>
+                {error && <p className="error-message">{error}</p>}
                 <div className="input-box">
                     <input
                         type="text"

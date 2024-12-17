@@ -23,7 +23,7 @@ const Home = () => {
                         :
                         (<>
                             <h2>
-                                Yer not logged in
+                                You are not logged in
                             </h2>
                             <Link to="/login">Login</Link>
                         </>)
