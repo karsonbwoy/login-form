@@ -3,11 +3,15 @@ import React, { createContext, useState } from "react";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(localStorage.getItem("user"));
+
+
+    const [user, setUser] = useState(localStorage.getItem("userId"));
+    const [token, setToken] = useState(localStorage.getItem("token"))
 
     const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem("user", userData)
+        setUser(userData.userId);
+        localStorage.setItem("userId", userData.userId)
+        localStorage.setItem("token", userData.token)
     }
 
     const logout = () => {

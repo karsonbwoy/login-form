@@ -15,8 +15,7 @@ const LoginForm = () => {
         username,
         password,
     }
-    const { user, login } = useContext(UserContext)
-    console.log(user);
+    const { user, login } = useContext(UserContext);
 
     useEffect(() => {
         if (user) {
@@ -33,10 +32,10 @@ const LoginForm = () => {
             },
             body: JSON.stringify(data),
         })
-            .then((response) => {
-                let fetchedData = response.json()
+            .then(async (response) => {
+                let fetchedData = await response.json()
                 if (response.status === 200) {
-                    login(username)
+                    login(fetchedData)
                     navigate("/");
 
 
