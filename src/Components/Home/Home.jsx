@@ -6,17 +6,18 @@ import UserContext from "../../UserContext";
 
 
 const Home = () => {
-    const { user, logout } = useContext(UserContext)
+    const { userId, userName, logout } = useContext(UserContext)
     return (
         <div className="wrapper">
             <form action="">
                 <h1>Home</h1>
                 {
-                    user ?
+                    userId ?
                         <>
                             <p>
-                                Hello {user}
+                                Hello {userName}
                             </p>
+
                             <button onClick={logout}>Logout</button>
                         </>
 

@@ -4,8 +4,9 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
 
-    const [user, setUser] = useState(localStorage.getItem("userId"));
-    const [token, setToken] = useState(localStorage.getItem("token"))
+    const [userId, setUserId] = useState(localStorage.getItem("userId"));
+    const [userName, setUserName] = useState(localStorage.getItem("userName"));
+    const [token] = useState(localStorage.getItem("token"))
 
     useEffect(() => {
         if (token) {
@@ -18,7 +19,7 @@ export const UserProvider = ({ children }) => {
                 .then(res => {
                     if (res.status === 403) {
                         console.log(res.status);
-                        setUser(null)
+                        setUserId(null)
                         localStorage.clear()
                     }
 
@@ -32,18 +33,21 @@ export const UserProvider = ({ children }) => {
     }, [token])
 
     const login = (userData) => {
-        setUser(userData.userId);
+        setUserId(userData.userId);
+        setUserName(userData.userName)
         localStorage.setItem("userId", userData.userId)
+        localStorage.setItem("userName", userData.userName)
         localStorage.setItem("token", userData.token)
     }
 
     const logout = () => {
-        setUser(null)
+        setUserId(null)
+        setUserName(null)
         localStorage.clear()
     }
 
     return (
-        <UserContext.Provider value={{ user, login, logout }}>
+        <UserContext.Provider value={{ userId, userName, login, logout }}>
             {children}
         </UserContext.Provider>
     )
