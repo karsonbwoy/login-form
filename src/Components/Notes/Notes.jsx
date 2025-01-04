@@ -5,38 +5,39 @@ import UserContext from "../../UserContext";
 
 
 const Notes = () => {
+
     const { userId, userNotes, setUserNotes } = useContext(UserContext)
-    const notes = userNotes
+    console.log(userNotes);
+
+    const handleSave = () => {
+        localStorage.setItem('userNotes', userNotes)
+    }
 
     const handleChange = (text, id) => {
-        console.log(text);
-
-        let newNotes = notes.map((note, i) => (i === id ? text : note))
+        let newNotes = userNotes.map((note, i) => (i === id ? text : note))
         setUserNotes(newNotes);
     }
 
     const handleRemoveNote = (id) => {
-        let newNotes = notes.filter((note, i) => i !== id)
-        setUserNotes(newNotes)
-
-        console.log('clicked ' + id);
-
+        let newNotes = userNotes.filter((note, i) => i !== id)
+        setUserNotes(newNotes);
     }
 
     const handleAddNote = () => {
-        setUserNotes([...notes, ''])
+        let newNotes = [...userNotes, '']
+        setUserNotes(newNotes)
     }
 
     return (<div className="notes-container wrapper">
         <p>
             Your notes:
         </p>
-        {notes.map((note, id) => <Note
+        {userNotes.map((note, id) => <Note
             handleRemoveNote={() => handleRemoveNote(id)}
             handleChange={(text) => handleChange(text, id)}
             note={note} key={id} />)}
         <button onClick={handleAddNote}>Add note</button>
-        <button>Save</button>
+        <button onClick={handleSave}>Save</button>
 
     </div>)
 }

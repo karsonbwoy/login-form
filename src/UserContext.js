@@ -6,7 +6,7 @@ export const UserProvider = ({ children }) => {
 
     const [userId, setUserId] = useState(localStorage.getItem("userId"));
     const [userName, setUserName] = useState(localStorage.getItem("userName"));
-    const [userNotes, setUserNotes] = useState(['a', 'b', 'c', 'd'])
+    const [userNotes, setUserNotes] = useState(localStorage.getItem('userNotes').split(',') || [])
     const [token] = useState(localStorage.getItem("token"))
 
     useEffect(() => {
