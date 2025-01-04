@@ -6,16 +6,29 @@ export const UserProvider = ({ children }) => {
 
     const [user, setUser] = useState(localStorage.getItem("userId"));
     const [token, setToken] = useState(localStorage.getItem("token"))
-    useEffect(() => {
-        fetch('http://localhost:5000/api/auth/auth', {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .then(res => res.json())
-            .then(data => console.log(data.message));
 
+    useEffect(() => {
+        if (token) {
+            fetch('http://localhost:5000/api/auth/auth', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(res => {
+                    if (res.status === 403) {
+                        console.log(res.status);
+                        setUser(null)
+                        localStorage.clear()
+                    }
+
+                    return res.json()
+                })
+                .then(data => {
+                    console.log(data.message)
+                })
+                .catch(error => console.log(error));
+        }
     }, [token])
 
     const login = (userData) => {
