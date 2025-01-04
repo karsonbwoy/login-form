@@ -9,7 +9,7 @@ const Notes = () => {
     const notes = userNotes
 
     const handleChange = (text, id) => {
-        console.log(id);
+        console.log(text);
 
         let newNotes = notes.map((note, i) => (i === id ? text : note))
         setUserNotes(newNotes);
@@ -24,14 +24,17 @@ const Notes = () => {
     }
 
     const handleAddNote = () => {
-        setUserNotes(['', ...notes])
+        setUserNotes([...notes, ''])
     }
 
     return (<div className="notes-container wrapper">
         <p>
             Your notes:
         </p>
-        {notes.map((note, id) => <Note handleRemoveNote={() => handleRemoveNote(id)} handleChange={(text) => handleChange(text, id)} note={note} key={id} />)}
+        {notes.map((note, id) => <Note
+            handleRemoveNote={() => handleRemoveNote(id)}
+            handleChange={(text) => handleChange(text, id)}
+            note={note} key={id} />)}
         <button onClick={handleAddNote}>Add note</button>
         <button>Save</button>
 

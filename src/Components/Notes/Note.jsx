@@ -5,17 +5,15 @@ const Note = ({ note, handleChange, handleRemoveNote }) => {
 
     return (
         <div className="note-wrapper">
-            <div
-                className="note-container"
-                contentEditable
-                suppressContentEditableWarning
-                onInput={(e) => handleChange(e.target.innerText)}
-            >
-                {note}
-            </div>
+            <textarea
+                className="note-input"
+                onChange={(e) => handleChange(e.target.value)}
+                value={note}
+            />
             <button onClick={handleRemoveNote}>x</button>
         </div>
     )
 }
 
 export default Note;
+
