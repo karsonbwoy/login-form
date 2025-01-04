@@ -4,27 +4,27 @@ import Note from "./Note";
 import UserContext from "../../UserContext";
 
 
-
 const Notes = () => {
-    const [notes, setNotes] = useState(['a', 'b', 'c', 'd'])
+    const { userId, userNotes, setUserNotes } = useContext(UserContext)
+    const notes = userNotes
 
     const handleChange = (text, id) => {
         console.log(id);
 
         let newNotes = notes.map((note, i) => (i === id ? text : note))
-        setNotes(newNotes);
+        setUserNotes(newNotes);
     }
 
     const handleRemoveNote = (id) => {
         let newNotes = notes.filter((note, i) => i !== id)
-        setNotes(newNotes)
+        setUserNotes(newNotes)
 
         console.log('clicked ' + id);
 
     }
 
     const handleAddNote = () => {
-        setNotes(['', ...notes])
+        setUserNotes(['', ...notes])
     }
 
     return (<div className="notes-container wrapper">
