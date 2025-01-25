@@ -6,7 +6,7 @@ export const UserProvider = ({ children }) => {
 
     const [userId, setUserId] = useState(localStorage.getItem("userId"));
     const [userName, setUserName] = useState(localStorage.getItem("userName"));
-    const [userNotes, setUserNotes] = useState(localStorage.getItem('userNotes').split(',') || [])
+    const [userNotes, setUserNotes] = useState(localStorage.getItem('userNotes')?.split(',') || [])
     const [token] = useState(localStorage.getItem("token"))
 
     useEffect(() => {
@@ -36,8 +36,10 @@ export const UserProvider = ({ children }) => {
     const login = (userData) => {
         setUserId(userData.userId);
         setUserName(userData.userName)
+        setUserNotes(userData.userNotes)
         localStorage.setItem("userId", userData.userId)
         localStorage.setItem("userName", userData.userName)
+        localStorage.setItem("userNotes", userData.userNotes)
         localStorage.setItem("token", userData.token)
     }
 
