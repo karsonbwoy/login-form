@@ -4,9 +4,9 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
 
-    const [userId, setUserId] = useState(localStorage.getItem("userId"));
-    const [userName, setUserName] = useState(localStorage.getItem("userName"));
-    const [userNotes, setUserNotes] = useState(localStorage.getItem('userNotes')?.split(',') || [])
+    const [userId, setUserId] = useState();
+    const [userName, setUserName] = useState();
+    const [userNotes, setUserNotes] = useState()
     const [token] = useState(localStorage.getItem("token"))
 
     useEffect(() => {
@@ -20,14 +20,18 @@ export const UserProvider = ({ children }) => {
                 .then(res => {
                     if (res.status === 403) {
                         console.log(res.status);
-                        setUserId(null)
                         localStorage.clear()
                     }
 
                     return res.json()
                 })
                 .then(data => {
-                    console.log(data.message)
+                    const { message, user } = data
+                    console.log(message)
+                    setUserId(user._id)
+                    setUserName(user.username)
+                    setUserNotes(user.notes)
+
                 })
                 .catch(error => console.log(error));
         }
@@ -37,15 +41,13 @@ export const UserProvider = ({ children }) => {
         setUserId(userData.userId);
         setUserName(userData.userName)
         setUserNotes(userData.userNotes)
-        localStorage.setItem("userId", userData.userId)
-        localStorage.setItem("userName", userData.userName)
-        localStorage.setItem("userNotes", userData.userNotes)
         localStorage.setItem("token", userData.token)
     }
 
     const logout = () => {
         setUserId(null)
         setUserName(null)
+        setUserNotes(null)
         localStorage.clear()
     }
 
