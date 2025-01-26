@@ -37,6 +37,10 @@ export const UserProvider = ({ children }) => {
         }
     }, [token])
 
+    useEffect(() => {
+
+    }, [userNotes])
+
     const login = (userData) => {
         setUserId(userData.userId);
         setUserName(userData.userName)
@@ -51,8 +55,21 @@ export const UserProvider = ({ children }) => {
         localStorage.clear()
     }
 
+    const updateNotes = () => {
+        console.log(userNotes);
+
+        fetch('http://localhost:5000/api/auth/notes', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ userNotes })
+        })
+    }
+
     return (
-        <UserContext.Provider value={{ userId, userName, userNotes, setUserNotes, login, logout }}>
+        <UserContext.Provider value={{ userId, userName, userNotes, setUserNotes, login, logout, updateNotes }}>
             {children}
         </UserContext.Provider>
     )

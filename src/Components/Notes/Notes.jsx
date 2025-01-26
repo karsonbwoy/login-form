@@ -6,16 +6,15 @@ import UserContext from "../../UserContext";
 
 const Notes = () => {
 
-    const { userId, userNotes, setUserNotes } = useContext(UserContext)
-    console.log(userNotes);
-
-    const handleSave = () => {
-        localStorage.setItem('userNotes', userNotes)
-    }
+    const { updateNotes, userNotes, setUserNotes } = useContext(UserContext)
 
     const handleChange = (text, id) => {
         let newNotes = userNotes.map((note, i) => (i === id ? text : note))
         setUserNotes(newNotes);
+    }
+
+    const handleSave = () => {
+        updateNotes();
     }
 
     const handleRemoveNote = (id) => {
