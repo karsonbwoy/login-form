@@ -1,6 +1,7 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useContext } from "react";
 
 const UserContext = createContext();
+export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
 
@@ -69,7 +70,7 @@ export const UserProvider = ({ children }) => {
     }
 
     return (
-        <UserContext.Provider value={{ userId, userName, userNotes, setUserNotes, login, logout, updateNotes }}>
+        <UserContext.Provider value={{ useUser, userId, userName, userNotes, setUserNotes, login, logout, updateNotes }}>
             {children}
         </UserContext.Provider>
     )

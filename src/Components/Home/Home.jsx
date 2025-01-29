@@ -1,25 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import './Home.css';
 import Notes from "../Notes/Notes";
 import { Link } from "react-router-dom";
-import UserContext from "../../UserContext";
+import UserContext, { useUser } from "../../UserContext";
+import UserPage from "../UserPage/UserPage";
 
 
 
 const Home = () => {
-    const { userId, userName, logout } = useContext(UserContext)
+    const { userId } = useUser();
     return (
         <div className="wrapper">
             <h1>Home</h1>
             {
                 userId ?
-                    (<>
-                        <p>
-                            Hello {userName}
-                        </p>
-                        <button onClick={logout}>Logout</button>
-                        <Notes />
-                    </>)
+                    (<UserPage />)
 
                     :
                     (<>
