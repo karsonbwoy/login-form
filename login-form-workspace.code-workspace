@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../auth-backend"
+		},
+		{
+			"path": "../testingjs"
+		}
+	],
+	"settings": {}
+}
